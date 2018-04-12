@@ -398,6 +398,9 @@ module.exports = function(grunt) {
 				css = css.replace(/\/\* *(.*?) *\*\//g, '// $1');
 			}
 
+			// Remove empty newlines.
+			css = css.replace(/^\s*\n/gm, '');
+
 			// Save file
 			fs.writeFileSync(getCssFilePath(stylesheet), css);
 
@@ -412,9 +415,11 @@ module.exports = function(grunt) {
 					css = css.replace(/\/\* *(.*?) *\*\//g, '// $1');
 				}
 
+				// Remove empty newlines.
+				css = css.replace(/^\s*\n/gm, '');
+
+				// Save file
 				o.fontBaseName = o.iconList;
-
-
 				fs.writeFileSync(getCssFilePath(stylesheet), css);
 			}
 		}
