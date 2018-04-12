@@ -81,6 +81,7 @@ module.exports = function(grunt) {
 			logger: logger,
 			fontBaseName: options.font || 'icons',
 			destCss: options.destCss || params.destCss || params.dest,
+			iconList: options.iconList || false,
 			destScss: options.destScss || params.destScss || params.destCss || params.dest,
 			destSass: options.destSass || params.destSass || params.destCss || params.dest,
 			destLess: options.destLess || params.destLess || params.destCss || params.dest,
@@ -386,6 +387,10 @@ module.exports = function(grunt) {
 				stylesheet: stylesheet
 			});
 
+			// Seperate file for icon styes.
+			if (o.iconList) {
+				o.iconsStyles = false;
+			}
 			var css = renderTemplate(o.cssTemplate, cssContext);
 
 			// Fix CSS preprocessors comments: single line comments will be removed after compilation
@@ -395,6 +400,23 @@ module.exports = function(grunt) {
 
 			// Save file
 			fs.writeFileSync(getCssFilePath(stylesheet), css);
+
+			if (o.iconList) {
+				o.iconsStyles = true;
+				o.fontfaceStyles = false;
+
+				css = renderTemplate(o.cssTemplate, cssContext);
+
+				// Fix CSS preprocessors comments: single line comments will be removed after compilation
+				if (has(['sass', 'scss', 'less', 'styl'], stylesheet)) {
+					css = css.replace(/\/\* *(.*?) *\*\//g, '// $1');
+				}
+
+				o.fontBaseName = o.iconList;
+
+
+				fs.writeFileSync(getCssFilePath(stylesheet), css);
+			}
 		}
 
 		/**
